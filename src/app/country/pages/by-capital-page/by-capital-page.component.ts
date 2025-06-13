@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, resource, signal } from '@angular/core';
+import {rxResource} from '@angular/core/rxjs-interop'
 import { SearchInputComponent } from "../../components/search-input/search-input.component";
 import { ListComponent } from "../../components/list/list.component";
 import { CountryService } from '../../services/country.service';
 import { RESTCountry } from '../../interfaces/rest-countries.interface';
 import { CountryMapper } from '../../mappers/country.mapper';
 import { Country } from '../../interfaces/country.interface';
+import { firstValueFrom, of } from 'rxjs';
 
 @Component({
   selector: 'app-by-capital-page',
@@ -16,23 +18,56 @@ export class ByCapitalPageComponent {
 
   countryService = inject(CountryService);
 
-  isLoading = signal(false);
-  isError = signal<string | null>(null);
-  countries = signal<Country[]>([]);
+  // isLoading = signal(false);
+  // isError = signal<string | null>(null);
+  // countries = signal<Country[]>([]);
 
-  onSearch(query: string) {
-    if (this.isLoading()) return;
+  // onSearch(query: string) {
+  //   if (this.isLoading()) return;
 
-    this.isLoading.set(true);
-    this.isError.set(null);
+  //   this.isLoading.set(true);
+  //   this.isError.set(null);
 
-    this.countryService.searchByCapital(query)
-      .subscribe((countries) => {
-        this.isLoading.set(false);
-        this.countries.set(countries);
+  //   this.countryService.searchByCapital(query)
+  //     .subscribe({
+  //       next: (countries) => {
+  //         this.isLoading.set(false);
+  //         this.countries.set(countries);
+  //       },
+  //       error: (err) => {
+  //         this.isLoading.set(false);
+  //         this.countries.set([]);
+  //         this.isError.set(err)
+  //       },
 
-        // const c = CountryMapper.mapRestCountryArrayToCountryArray(countries);
-      });
-  }
+  //     });
+  // }
 
+  // con promesas
+  // query = signal('');
+  // countryResource = resource({
+  //   request: () => ({ query: this.query() }),
+  //   loader: async({request}) => {
+  //     if (!request.query) return [];
+
+  //     // return this.countryService.searchByCapital(request.query);
+  //     return await firstValueFrom(
+  //       this.countryService.searchByCapital(request.query)
+  //     );
+  //   }
+  // })
+
+  query = signal('');
+  countryResource = rxResource({
+    request: () => ({ query: this.query() }),
+    loader: ({request}) => {
+      if (!request.query) return of([]); // el of regresa un observable de lo que indiquemos
+
+      return this.countryService.searchByCapital(request.query)
+    }
+  })
 }
+
+// this.isLoading.set(false);
+// this.countries.set(countries);
+// const c = CountryMapper.mapRestCountryArrayToCountryArray(countries);

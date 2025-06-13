@@ -1,5 +1,23 @@
+<country-search-input placeholder="Buscar por capital" (value)="query.set($event)" />
+
+<!-- @if (countryResource.isLoading()) {
+ <div class="text-center mt-10">
+  <span class="loading loading-spinner loading-xl"></span>
+ </div>
+} -->
+
+<!-- @if (countryResource.error()) {
+  <h3>{{countryResource.error()}}</h3>
+} @if(countryResource.hasValue()) {
+  <country-list [countries]="countryResource.value()" />
+} -->
 
 
-<country-search-input placeholder="Buscar por capital" (value)="onSearch($event)" />
-
+<!-- @if (isError()) {
+<h3>{{isError()}}</h3>
+} @else {
 <country-list [countries]="countries()" />
+} -->
+
+ <country-list [countries]="countryResource.value() ?? []" [errorMessage]="countryResource.error()"
+[isEmpty]="countryResource.value()?.length === 0" [isLoading]="countryResource.isLoading()" />
