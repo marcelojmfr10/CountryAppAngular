@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, resource } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  resource,
+} from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { CountryService } from '../../services/country.service';
-import { NotFoundComponent } from "../../../shared/components/not-found/not-found.component";
+import { NotFoundComponent } from '../../../shared/components/not-found/not-found.component';
 import { CountryInformationComponent } from './country-information/country-information.component';
 
 @Component({
@@ -12,17 +17,15 @@ import { CountryInformationComponent } from './country-information/country-infor
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountryPageComponent {
-
   countrycode = inject(ActivatedRoute).snapshot.params['code'];
   countryService = inject(CountryService);
 
   countryResource = rxResource({
     request: () => ({
-      code: this.countrycode
+      code: this.countrycode,
     }),
     loader: ({ request }) => {
       return this.countryService.searchCountryByAlphaCode(request.code);
-    }
+    },
   });
-
 }

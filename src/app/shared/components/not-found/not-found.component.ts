@@ -8,11 +8,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotFoundComponent {
-
   location = inject(Location);
 
   goBack() {
     this.location.back();
   }
-
- }
+}

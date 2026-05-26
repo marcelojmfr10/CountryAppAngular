@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, linkedSignal, signal } from '@angular/core';
-import { ListComponent } from "../../components/list/list.component";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
+import { ListComponent } from '../../components/list/list.component';
 import { Region } from '../../interfaces/region.interface';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
@@ -10,12 +16,12 @@ function validateQueryParam(queryParam: string): Region {
   queryParam = queryParam.toLowerCase();
 
   const validRegions: Record<string, Region> = {
-    'africa': 'Africa',
-    'americas': 'Americas',
-    'asia': 'Asia',
-    'europe': 'Europe',
-    'oceania': 'Oceania',
-    'antarctic': 'Antarctic'
+    africa: 'Africa',
+    americas: 'Americas',
+    asia: 'Asia',
+    europe: 'Europe',
+    oceania: 'Oceania',
+    antarctic: 'Antarctic',
   };
 
   return validRegions[queryParam] ?? 'Americas';
@@ -28,7 +34,6 @@ function validateQueryParam(queryParam: string): Region {
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ByRegionPageComponent {
-
   countryService = inject(CountryService);
 
   public regions: Region[] = [
@@ -45,7 +50,9 @@ export class ByRegionPageComponent {
 
   queryParam = this.activatedRoute.snapshot.queryParamMap.get('region') ?? ''; //snapshot no es reactivo
 
-  selectedRegion = linkedSignal<Region>(() => validateQueryParam(this.queryParam));
+  selectedRegion = linkedSignal<Region>(() =>
+    validateQueryParam(this.queryParam),
+  );
 
   countryResource = rxResource({
     request: () => ({ region: this.selectedRegion() }),
@@ -56,12 +63,10 @@ export class ByRegionPageComponent {
       this.router.navigate(['/country/by-region'], {
         queryParams: {
           region: request.region,
-        }
-      })
+        },
+      });
 
-      return this.countryService.searchByRegion(request.region)
-    }
-  })
-
-
+      return this.countryService.searchByRegion(request.region);
+    },
+  });
 }

@@ -7,4 +7,4 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home-page.component.html',
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePageComponent { }
+export class HomePageComponent {}

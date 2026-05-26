@@ -7,4 +7,4 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './top-menu.component.html',
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopMenuComponent { }
+export class TopMenuComponent {}

@@ -9,10 +9,9 @@ import { Region } from '../interfaces/region.interface';
 const API_URL = 'https://restcountries.com/v3.1';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CountryService {
-
   private http = inject(HttpClient);
   private queryCacheCapital = new Map<string, Country[]>(); // {}
   private queryCacheCountry = new Map<string, Country[]>(); // {}
@@ -21,17 +20,20 @@ export class CountryService {
   searchByCapital(query: string): Observable<Country[]> {
     query = query.toLowerCase();
 
-    if(this.queryCacheCapital.has(query)) {
+    if (this.queryCacheCapital.has(query)) {
       return of(this.queryCacheCapital.get(query)!);
     }
 
-    return this.http.get<RESTCountry[]>(`${API_URL}/capital/${query}`)
-    .pipe(
-      map(restCountries => CountryMapper.mapRestCountryArrayToCountryArray(restCountries)),
-      tap(countries => this.queryCacheCapital.set(query, countries)),
-      catchError(error => {
-        return throwError(() => new Error(`No se pudo obtener países con ese query ${query}`));
-      })
+    return this.http.get<RESTCountry[]>(`${API_URL}/capital/${query}`).pipe(
+      map((restCountries) =>
+        CountryMapper.mapRestCountryArrayToCountryArray(restCountries),
+      ),
+      tap((countries) => this.queryCacheCapital.set(query, countries)),
+      catchError((error) => {
+        return throwError(
+          () => new Error(`No se pudo obtener países con ese query ${query}`),
+        );
+      }),
       // hay que especificar los parámetros porque sino se manda como referencia la función y choca con el this en la clase
     );
   }
@@ -41,52 +43,59 @@ export class CountryService {
   searchByCountry(query: string) {
     query = query.toLowerCase();
 
-    if(this.queryCacheCountry.has(query)) {
+    if (this.queryCacheCountry.has(query)) {
       return of(this.queryCacheCountry.get(query) ?? []); //.pipe(
       //  delay(2000)
       //);
     }
 
-    return this.http.get<RESTCountry[]>(`${API_URL}/name/${query}`)
-    .pipe(
-      map(restCountries => CountryMapper.mapRestCountryArrayToCountryArray(restCountries)),
-      tap(countries => this.queryCacheCountry.set(query, countries)),
+    return this.http.get<RESTCountry[]>(`${API_URL}/name/${query}`).pipe(
+      map((restCountries) =>
+        CountryMapper.mapRestCountryArrayToCountryArray(restCountries),
+      ),
+      tap((countries) => this.queryCacheCountry.set(query, countries)),
       delay(2000),
-      catchError(error => {
-        return throwError(() => new Error(`No se pudo obtener países con ese query ${query}`));
-      })
+      catchError((error) => {
+        return throwError(
+          () => new Error(`No se pudo obtener países con ese query ${query}`),
+        );
+      }),
     );
   }
 
   searchCountryByAlphaCode(code: string) {
-    return this.http.get<RESTCountry[]>(`${API_URL}/alpha/${code}`)
-    .pipe(
-      map(restCountries => CountryMapper.mapRestCountryArrayToCountryArray(restCountries)),
-      map(countries => countries.at(0)),
-      catchError(error => {
-        return throwError(() => new Error(`No se pudo encontrar un país con ese código ${code}`));
-      })
+    return this.http.get<RESTCountry[]>(`${API_URL}/alpha/${code}`).pipe(
+      map((restCountries) =>
+        CountryMapper.mapRestCountryArrayToCountryArray(restCountries),
+      ),
+      map((countries) => countries.at(0)),
+      catchError((error) => {
+        return throwError(
+          () =>
+            new Error(`No se pudo encontrar un país con ese código ${code}`),
+        );
+      }),
     );
   }
 
   searchByRegion(region: Region) {
-    if(this.queryCacheRegion.has(region)) {
+    if (this.queryCacheRegion.has(region)) {
       return of(this.queryCacheRegion.get(region) ?? []); //.pipe(
       //  delay(2000)
       //);
     }
 
-    return this.http.get<RESTCountry[]>(`${API_URL}/region/${region}`)
-    .pipe(
-      map(restCountries => CountryMapper.mapRestCountryArrayToCountryArray(restCountries)),
-      tap(countries => this.queryCacheRegion.set(region, countries)),
+    return this.http.get<RESTCountry[]>(`${API_URL}/region/${region}`).pipe(
+      map((restCountries) =>
+        CountryMapper.mapRestCountryArrayToCountryArray(restCountries),
+      ),
+      tap((countries) => this.queryCacheRegion.set(region, countries)),
       // delay(2000),
-      catchError(error => {
-        return throwError(() => new Error(`No se pudo obtener países con ese query ${region}`));
-      })
+      catchError((error) => {
+        return throwError(
+          () => new Error(`No se pudo obtener países con ese query ${region}`),
+        );
+      }),
     );
   }
-
-
-
 }

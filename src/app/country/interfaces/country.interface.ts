@@ -1,7 +1,4 @@
-
-
 export interface Country {
-
   cca2: string;
   flag: string;
   flagSvg: string;
@@ -10,5 +7,4 @@ export interface Country {
   population: number;
   region: string;
   subRegion: string;
-
 }
